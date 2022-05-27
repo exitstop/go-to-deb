@@ -4,7 +4,13 @@ before:
     # you may remove this if you don't need go generate
     - go generate ./...
 builds:
-  -
+  # https://github.com/fastly/cli/blob/main/.goreleaser.yml
+  - <<: &build_defaults
+      main: ./
+      ldflags:
+        - -s -w -X "github.com/FaceChainTeam/go-to-deb/main.Version=v{{ .Version }}"
+        - -X "github.com/FaceChainTeam/go-to-deb/main.GitCommit={{ .ShortCommit }}"
+        - -X "github.com/FaceChainTeam/go-to-deb/main.Environment=release"
     binary: test-foo
     env:
       - CGO_ENABLED=0
@@ -31,10 +37,14 @@ nfpms:
     license: "MIT"
     formats:
       - deb
-    files:
-      "debian/scripts/systemd/test-foo.service": "/etc/systemd/system/test-foo.service"
-    config_files:
-      "debian/conf/test-foo.conf": "/etc/test-foo.conf"
+      - rpm
+    overrides:
+    contents:
+    - src: debian/conf/test-foo.conf
+      dst: /etc/test-foo.conf
+      type: config
+    - src: debian/scripts/systemd/test-foo.service
+      dst: /etc/systemd/system/test-foo.service
     scripts:
       postinstall: debian/scripts/postinstall.sh
       preremove: debian/scripts/preremove.sh

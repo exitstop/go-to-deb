@@ -5,6 +5,12 @@ import (
 	"time"
 )
 
+var (
+	Version     string
+	GitCommit   string
+	Environment string
+)
+
 func main() {
 	for {
 		log.Println("hello world!")

@@ -17,6 +17,8 @@ With a local install of GoReleaser, without tagging, the following will build a 
 
 ~~~
 goreleaser --snapshot --skip-publish --rm-dist
+or
+make release
 ~~~
 
 My requirement was to deploy to a Raspberry Pi. You'll need to change the build [configuration](.goreleaser.yml) and modify the [service file](debian/scripts/systemd/test-foo.service) for other architectures.
